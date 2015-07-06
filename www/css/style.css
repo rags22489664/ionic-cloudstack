@@ -1,0 +1,60 @@
+.loading-container .loading {
+    background-color: transparent;
+}
+
+html {
+    font-family: 'Roboto', sans-serif;
+}
+
+.bar .buttons-right span {
+    display: block;
+    margin-left: 0px;
+}
+
+.bar .title + .buttons {
+    top: 11px;
+}
+
+.platform-android .action-sheet-backdrop.active {
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.platform-android .action-sheet {
+    margin-left: 8px;
+    margin-right: 8px;
+}
+
+.platform-android .action-sheet-group {
+    margin-bottom: 8px;
+    border-radius: 4px;
+    background: #f1f2f3
+}
+
+.platform-android .action-sheet .button {
+    text-align: center;
+    border-color: #d1d3d6;
+    font-size: 21px;
+    color: #007aff;
+}
+
+.platform-android .action-sheet .button.destructive {
+    color: #ff3b30;
+}
+
+.platform-android .action-sheet-group {
+    margin-bottom: 8px;
+    border-radius: 4px;
+    background-color: #fff;
+}
+
+.platform-android .action-sheet-cancel {
+    display: block;
+}
+
+.platform-android .bar .title {
+    font-size: 17px;
+}
+
+.bar .title.title-left {
+    text-align: center;
+}

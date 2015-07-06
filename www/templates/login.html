@@ -1,0 +1,27 @@
+<ion-view view-title="Login to Apache CloudStack">
+    <ion-header-bar align-title="center" class="bar-calm">
+        <h1 class="title">Login to Apache CloudStack</h1>
+    </ion-header-bar>
+    <ion-content class="has-header">
+        <form name="loginForm" ng-submit="login()" novalidate>
+            <div class="list list-inset">
+                <label class="item item-input">
+                    <input type="url" placeholder="URL" required="true" name="url" ng-model="form.url" ng-class="{ 'error': loginForm.url.$invalid && !loginForm.url.$pristine }">
+                </label>
+                <label class="item item-input">
+                    <input type="text" placeholder="Username" required="true" name="username" ng-model="form.username" ng-class="{ 'error': loginForm.username.$invalid && !loginForm.username.$pristine }">
+                </label>
+                <label class="item item-input">
+                    <input type="password" placeholder="Password" required="true" name="password" ng-model="form.password" ng-class="{ 'error': loginForm.password.$invalid && !loginForm.password.$pristine }">
+                </label>
+                <label class="item item-input">
+                    <input type="text" placeholder="Domain" name="domain" ng-model="form.domain">
+                </label>
+                <button class="button button-block button-royal" type="submit" ng-disabled="loginForm.$invalid">
+                    Login
+                </button>
+            </div>
+
+        </form>
+    </ion-content>
+</ion-view>

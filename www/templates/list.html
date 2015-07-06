@@ -1,0 +1,38 @@
+<ion-view view-title="{{title}}" class="bar-calm">
+    <div class="bar bar-subheader" style="border: none;">
+
+        <label class="item item-input">
+            <i class="icon ion-funnel placeholder-icon"></i>
+            <input type="text" placeholder="Filter" ng-model="data.filterText">
+        </label>
+
+    </div>
+    
+    <div class="bar bar-subheader" style="border: none;">
+
+        <label class="item item-input">
+            <i class="icon ion-funnel placeholder-icon"></i>
+            <input type="text" placeholder="Filter" ng-model="data.filterText">
+        </label>
+
+    </div>
+    
+    <ion-content style="top: 100px">
+        <ion-refresher
+                pulling-text="Pull to refresh..."
+                on-refresh="data.doRefresh()">
+        </ion-refresher>
+        <ion-list>
+            <ion-item on-hold="data.onHold(item, data.items, $index)" collection-repeat="item in data.items track by $index | filter:data.filterText">
+                <a>
+                    <h2>{{item.primaryContent}}</h2>
+                    <p>{{item.secondaryContent}}</p>
+                    <p ng-if="item.ternaryContent">{{item.ternaryContent}}</p>
+                </a>
+            </ion-item>
+        </ion-list>
+
+        <ion-infinite-scroll on-infinite="data.fetchMore()" distance="1%">
+        </ion-infinite-scroll>
+    </ion-content>
+</ion-view>

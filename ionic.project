@@ -1,0 +1,13 @@
+{
+  "name": "cloudstack",
+  "app_id": "42ac9645",
+  "defaultBrowser": "google-chrome",
+  "gulpStartupTasks": [
+    "sass",
+    "watch"
+  ],
+  "watchPatterns": [
+    "www/**/*",
+    "!www/lib/**/*"
+  ]
+}
