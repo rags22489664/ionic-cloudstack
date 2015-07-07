@@ -77,19 +77,9 @@ angular.module('starter.controllers', [])
     })
 
 
-    .controller('VMCtrl', function ($scope, LoadingService, ApiService, ListService, VMService) {
+    .controller('VMCtrl', function ($scope, LoadingService, ApiService, ListService, VMService, NotificationService) {
 
         $scope.title = 'VirtualMachines';
-
-        var mapperFn = function (vms) {
-            if (vms && vms.length) {
-                for (var i = 0; i < vms.length; i++) {
-                    vms[i].primaryContent = vms[i].displayname;
-                    vms[i].secondaryContent = vms[i].instancename;
-                    vms[i].ternaryContent = vms[i].state;
-                }
-            }
-        };
 
         ListService.initialize({
             scope: $scope,
@@ -97,7 +87,7 @@ angular.module('starter.controllers', [])
                 command: 'listVirtualMachines',
                 listAll: true
             },
-            mapper: mapperFn,
+            mapper: VMService.mapper,
             responsename: 'listvirtualmachinesresponse',
             responseobj: 'virtualmachine',
             actions: {
@@ -133,34 +123,52 @@ angular.module('starter.controllers', [])
 
                     switch (button.id) {
                         case 'stop' : {
-                            VMService.action('stop', vm, function(){
-                                VMService.refresh(vm, function(updatedVM){
-                                    if(updatedVM) {
-                                        items[index] = mapperFn([updatedVM]);
-                                    }
-                                });
+                            VMService.action({
+                                action: 'stop',
+                                item: vm,
+                                items: items,
+                                index: index,
+                                scope: $scope,
+                                success: function() {
+                                    NotificationService.toast('VM ' + vm.name + ' was stopped successfully');
+                                },
+                                error: function() {
+
+                                }
                             });
                             break;
                         }
 
                         case 'reboot' : {
-                            VMService.action('reboot', vm, function(){
-                                VMService.refresh(vm, function(updatedVM){
-                                    if(updatedVM) {
-                                        items[index] = mapperFn([updatedVM]);
-                                    }
-                                });
+                            VMService.action({
+                                action: 'reboot',
+                                item: vm,
+                                items: items,
+                                index: index,
+                                scope: $scope,
+                                success: function() {
+                                    NotificationService.toast('VM ' + vm.name + ' was rebooted successfully');
+                                },
+                                error: function() {
+
+                                }
                             });
                             break;
                         }
 
                         case 'start' : {
-                            VMService.action('start', vm, function(){
-                                VMService.refresh(vm, function(updatedVM){
-                                    if(updatedVM) {
-                                        items[index] = mapperFn([updatedVM]);
-                                    }
-                                });
+                            VMService.action({
+                                action: 'start',
+                                item: vm,
+                                items: items,
+                                index: index,
+                                scope: $scope,
+                                success: function() {
+                                    NotificationService.toast('VM ' + vm.name + ' was started successfully');
+                                },
+                                error: function() {
+
+                                }
                             });
                             break;
                         }
@@ -169,9 +177,18 @@ angular.module('starter.controllers', [])
                     return true;
                 },
                 destructiveButtonClicked: function(vm, items, index) {
-                    VMService.action('destroy', vm, function(){
-                        //var refreshedVM = VMService.refresh(vm);
-                        delete items[index];
+                    VMService.action({
+                        action: 'destroy',
+                        item: vm,
+                        items: items,
+                        index: index,
+                        scope: $scope,
+                        success: function() {
+                            NotificationService.toast('VM ' + vm.name + ' was destroyed successfully');
+                        },
+                        error: function() {
+
+                        }
                     });
                     return true;
                 }

@@ -289,9 +289,27 @@ angular.module('starter.services', [])
         };
     })
 
-    .service('VMService', function (ApiService, NotificationService, AsyncService) {
+    .service('VMService', function (ApiService, NotificationService, AsyncService, $timeout) {
 
-        this.action = function(action, vm, successFn, errorFn) {
+        var mapperFn = function (vms) {
+            if (vms && vms.length) {
+                for (var i = 0; i < vms.length; i++) {
+                    vms[i].primaryContent = vms[i].displayname;
+                    vms[i].secondaryContent = vms[i].instancename;
+                    vms[i].ternaryContent = vms[i].state;
+                }
+            }
+        };
+
+        var actionFn = function(args) {
+
+            var action = args.action;
+            var vm = args.item;
+            var items = args.items;
+            var index = args.index;
+            var scope = args.scope;
+            var successFn = args.success;
+            var errorFn = args.error;
 
             var query = {};
 
@@ -326,20 +344,29 @@ angular.module('starter.services', [])
                 AsyncService.queryAsync({
                     jobid: data[responseName].jobid,
                     success: function() {
-                        successFn();
-                        NotificationService.toast('action ' + action + ' on VM with name ' + vm.name + ' was successful');
+                        refreshFn(vm, function(updatedVM){
+                            if(updatedVM) {
+                                mapperFn([updatedVM]);
+                                items[index] = updatedVM;
+                                $timeout(function() {
+                                    scope.$apply();
+                                    successFn();
+                                });
+                            } else {
+                                errorFn();
+                            }
+                        });
                     },
                     error: function(data, status, headers, config) {
                         errorFn();
-                        NotificationService.toast('error during query async');
                     }
                 });
             }, function (data, status, headers, config) {
-                NotificationService.toast('error during ' + action + ' on VM with name ' + vm.name);
+                errorFn();
             });
         };
 
-        this.refresh = function(vm, callback) {
+        var refreshFn = function(vm, callback) {
             var query = {};
 
             query.id = vm.id;
@@ -347,11 +374,17 @@ angular.module('starter.services', [])
             query.listall = true;
 
             ApiService.invoke(query, 'GET', function (data, status, headers, config) {
-                //callback(data.listvirtualmachinesresponse.virtualmachine[0]);
+                callback(data.listvirtualmachinesresponse.virtualmachine[0]);
             },function (data, status, headers, config) {
-                //callback(null);
+                callback(null);
             });
         };
+
+        this.mapper = mapperFn;
+
+        this.action = actionFn;
+
+        this.refresh = refreshFn;
     })
 
     .factory('authentication', function ($state) {
